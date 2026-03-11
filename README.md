@@ -1,21 +1,21 @@
-CSV Contact Cleaner
+# CSV Contact Cleaner
 
-Ferramenta em **Node.js** para validar listas de contatos em CSV, identificar inconsistências e remover automaticamente contatos inválidos através de uma API.
+Script em **Node.js** para analisar uma base de contatos em CSV, identificar inconsistências e remover contatos inválidos através de uma API.
 
-O script foi criado para limpar bases de contatos grandes de forma segura, com suporte a **modo de simulação**, validação de duplicidade e geração de relatório no terminal.
+O script valida automaticamente os contatos e remove aqueles que não atendem aos critérios definidos.
 
 ## Funcionalidades
 
-A ferramenta analisa todos os contatos do CSV e aplica as seguintes regras:
+O sistema analisa todos os contatos do CSV e aplica as seguintes regras de validação:
 
-* Contatos sem nome
-* Contatos sem número
-* Nomes duplicados
-* Números duplicados
+1. Contatos sem nome
+2. Contatos sem número
+3. Contatos com nome duplicado
+4. Contatos com número duplicado
 
-Todos os contatos que se encaixarem nessas condições são adicionados à lista de exclusão e enviados para remoção através da API configurada.
+Todos os contatos que se enquadrarem nessas regras são adicionados a uma lista de exclusão e removidos utilizando a API configurada.
 
-Também existe um **modo de simulação**, que permite validar os dados sem executar exclusões.
+Também é possível executar o script em **modo simulação**, onde nenhuma exclusão é feita. Nesse modo o sistema apenas mostra quais contatos seriam removidos.
 
 ## Tecnologias utilizadas
 
@@ -27,38 +27,34 @@ Também existe um **modo de simulação**, que permite validar os dados sem exec
 ## Estrutura do projeto
 
 ```
-csv-contact-cleaner
+project
 │
-├─ src
-│  └─ index.js
-│
-├─ data
-│  └─ addressbook.csv
-├─ README.md
-└─ LICENSE
+├─ index.js
+├─ package.json
+└─ addressbook.csv
 ```
 
 ## Instalação
 
-Clone o repositório
+1. Clone o repositório
 
 ```
-git clone https://github.com/seu-usuario/csv-contact-cleaner.git
+git clone https://github.com/seuusuario/seurepositorio.git
 ```
 
-Entre na pasta do projeto
+2. Acesse a pasta do projeto
 
 ```
-cd csv-contact-cleaner
+cd seurepositorio
 ```
 
-Instale as dependências
+3. Instale as dependências
 
 ```
 npm install
 ```
 
-## Dependências
+## Dependências utilizadas
 
 ```
 npm install axios csv-parser
@@ -66,40 +62,48 @@ npm install axios csv-parser
 
 ## Configuração
 
-Crie um arquivo `.env` baseado no exemplo:
+No início do arquivo existem algumas configurações importantes:
 
 ```
-BASE_URL=https://sua-api.com
-QUEUE_ID=20
-API_KEY=123
-CSV_FILE_PATH=data/addressbook.csv
-SIMULATION_MODE=true
-REQUEST_DELAY_MS=1
+const BASE_URL = "https://sua-api.com";
+const QUEUE_ID = 20;
+const API_KEY = "123";
+const CSV_FILE_PATH = "addressbook.csv";
+
+const SIMULATION_MODE = false;
+const REQUEST_DELAY_MS = 1;
 ```
 
 ### Parâmetros
 
-BASE_URL
-URL da API utilizada para excluir contatos.
+**BASE_URL**
 
-QUEUE_ID
-Identificador da fila utilizada na requisição.
+URL base da API responsável por remover os contatos.
 
-API_KEY
-Chave de autenticação da API.
+**QUEUE_ID**
 
-CSV_FILE_PATH
+Identificador da fila utilizada na API.
+
+**API_KEY**
+
+Chave de autenticação utilizada na requisição.
+
+**CSV_FILE_PATH**
+
 Caminho do arquivo CSV contendo os contatos.
 
-SIMULATION_MODE
-Define se o script apenas simula ou realmente remove contatos.
+**SIMULATION_MODE**
 
-REQUEST_DELAY_MS
-Intervalo entre requisições para evitar sobrecarga na API.
+true → apenas simula as exclusões
+false → remove os contatos de fato
 
-## Estrutura do CSV
+**REQUEST_DELAY_MS**
 
-O CSV deve usar **; como separador**.
+Delay entre requisições para evitar sobrecarga na API.
+
+## Estrutura esperada do CSV
+
+O CSV deve utilizar **; como separador**.
 
 Exemplo:
 
@@ -110,20 +114,20 @@ id;name;number
 3;;5511977777777
 ```
 
-O script aceita variações comuns de cabeçalho:
+O script também tenta reconhecer variações de cabeçalhos comuns:
 
-name / Nome / nome
-number / Número / Numero / Telefone
+* name / Nome / nome
+* number / Número / Numero / Telefone
 
 ## Como executar
 
 Execute o script com:
 
 ```
-node src/index.js
+node index.js
 ```
 
-## Exemplo de saída
+## Exemplo de saída no terminal
 
 ```
 Iniciando validação de contatos
@@ -138,7 +142,7 @@ Contato 102 removido com sucesso
 
 ## Relatório final
 
-Ao finalizar, o sistema apresenta um resumo da execução:
+Ao final da execução o sistema apresenta um resumo:
 
 ```
 RELATÓRIO FINAL
@@ -154,29 +158,31 @@ Processo finalizado
 
 ## Modo simulação
 
-Para rodar apenas a análise sem apagar contatos:
+Para executar apenas uma análise sem remover contatos:
 
 ```
-SIMULATION_MODE=true
+const SIMULATION_MODE = true
 ```
 
-Esse modo permite validar a base antes de executar alterações.
+Nesse modo o sistema apenas identifica os contatos problemáticos e gera o relatório.
 
-## Boas práticas antes de executar
+## Boas práticas recomendadas
 
-* Faça backup da base de contatos
-* Execute primeiro em modo de simulação
-* Analise o relatório gerado
-* Execute novamente com remoção ativa
+Antes de executar em produção:
 
-## Melhorias futuras
+1. Execute primeiro em modo simulação
+2. Faça backup da base de contatos
+3. Verifique o relatório gerado
+4. Depois execute com remoção ativa
 
-* Exportar relatório para JSON
-* Exportar relatório para CSV
+## Possíveis melhorias futuras
+
+* Exportar relatório para JSON ou CSV
 * Adicionar barra de progresso
+* Permitir configuração via variáveis de ambiente
 * Criar CLI com argumentos
-* Logs estruturados
+* Log estruturado
 
 ## Licença
 
-Distribuído sob licença MIT.
+Este projeto é distribuído sob a licença MIT.
